@@ -15,19 +15,16 @@ server.post('/log/:requestId', (req, res, next) => {
   res.send();
 });
 
-server.get('/log/:requestId', (req, res, next) => {
-  res.send(fuckingLogger.get(req.params.requestId));
+server.get('/log/:requestId', async (req, res, next) => {
+  const result = await fuckingLogger.get(req.params.requestId)
+  
+  res.send(result);
 });
 
-// server.put('/listen', (req, res, next) => {
-//   /*
-//     req.body: {
-//       urlPaths: [ ... ]
-//     }
-//   */
-
-//   fuckingLogger.turnOn();
-// });
-
+server.get('/log/', async (req, res, next) => {
+  const result = await fuckingLogger.getAll()
+  
+  res.send(result);
+});
 
 server.listen(3000)
