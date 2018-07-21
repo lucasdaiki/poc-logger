@@ -12,12 +12,6 @@ const log = (packageName, url = 'http://localhost:3000/log') => (step, message, 
     {
       headers: { 'x-request-id': requestId }
     })
-    .then(function (response) {
-      console.log('Success');
-    })
-    .catch(function (error) {
-      console.log('Error');
-    });
 }
 
 module.exports = log
