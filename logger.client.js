@@ -234,37 +234,19 @@ const mock = [
   }
 ]
 
-const log = packageName => (step, message, requestId) => {
-  return request.post(`http://localhost:3000/log/${requestId}`, {
-    step,
-    data: message.data,
-    request: message.request,
-    path: message.url_path,
-    method: message.method,
-    package_name: packageName,
-    sent: new Date().toISOString()
-  })
-    .then(function (response) {
-      console.log('Success');
-    })
-    .catch(function (error) {
-      console.log('Error');
-    });
-}
+const log = require('./log')
+const url = 'http://localhost:3002/batata'
 
 const requestId = cuid();
 console.log(requestId)
 
 Promise.all(
   [
-    log('Distributor')('', { request: { url_path: '/v1/distributors/transaction/', method: 'POST' } }, requestId),
-    log('Distributor')('Validate Transaction', { data: mock[0] }, requestId),
-    log('Pricing')('', { request: { url_path: '/v1/pricing/USD/', method: 'GET' } }, requestId),
-    log('Pricing')('Get Pricing', { data: mock[1] }, requestId),
-    log('Distributor')('Get Balance', { data: mock[2] }, requestId),
-    log('Distributor')('Create Transaction', { data: mock[3] }, requestId)
+    log('Distributor', url)('', { request: { url_path: '/v1/distributors/transaction/', method: 'POST' } }, requestId, 'REQUEST'),
+    log('Distributor', url)('Validate Transaction', { data: mock[0] }, requestId),
+    log('Pricing', url)('', { request: { url_path: '/v1/pricing/USD/', method: 'GET' } }, requestId, 'REQUEST'),
+    log('Pricing', url)('Get Pricing', { data: mock[1] }, requestId),
+    log('Distributor', url)('Get Balance', { data: mock[2] }, requestId),
+    log('Distributor', url)('Create Transaction', { data: mock[3] }, requestId)
   ]
-).then(() => {
-  request.get(`http://localhost:3000/log/${requestId}`)
-    .then(res => console.log(res.data))
-})
+)

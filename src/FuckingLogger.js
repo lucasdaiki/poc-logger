@@ -7,9 +7,7 @@ class FuckingLogger {
   }
 
   async log(requestId, receivedData) {
-    const { sent, package_name, step, data, request } = receivedData
-
-    const type = request ? 'REQUEST' : 'LOG';
+    const { sent, package_name, step, data, request, type } = receivedData
 
     this.db.save({
       requestId,
